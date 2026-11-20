@@ -1,0 +1,105 @@
+{% extends "kits/base.html" %}
+{% load static %}
+{% block title %}NutriKits Rwanda · Admin{% endblock %}
+{% block bodyclass %}app-page admin{% endblock %}
+{% block content %}
+<header class="topbar" id="topbar">
+  <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Admin</em></a>
+  <nav id="tabs" class="tabs" aria-label="Sections">
+    <button data-tab="publish" class="active"><span class="ti">✍️</span><span class="tl">Publish</span></button>
+    <button data-tab="recipes"><span class="ti">📚</span><span class="tl">Recipes</span></button>
+    <button data-tab="ingredients"><span class="ti">🥬</span><span class="tl">Ingredients</span></button>
+    <button data-tab="orders"><span class="ti">📦</span><span class="tl">Orders</span></button>
+  </nav>
+  <div class="user">
+    <a class="btn small" href="{% url 'portal' %}">User portal</a>
+    <a class="btn small ghost hide-m" href="/admin/">Django admin</a>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn small ghost">Sign out</button></form>
+  </div>
+</header>
+
+<main class="container">
+  <div class="phero solo">
+    <span class="float f2" aria-hidden="true">🍲</span><span class="float f4" aria-hidden="true">🥬</span>
+    <div class="phero-text">
+      <p class="eyebrow-l">Admin dashboard</p>
+      <h1>Publish meals, <span class="hl">keep it fresh</span></h1>
+      <p>Changes go live for customers within seconds. Add photos, a demo video and health tags to every kit.</p>
+    </div>
+  </div>
+  <div id="stats" class="stats" aria-label="Summary"></div>
+
+  <section id="tab-publish" class="tab">
+    <div class="page-head"><span class="ico t-mint">✍️</span><div><h2 id="form-title">Publish a new meal kit</h2><p>Fill in the details, tag it, then save to publish.</p></div></div>
+    <form id="recipe-form" class="card stack">
+      <input type="hidden" id="r-id">
+      <div class="row">
+        <label class="grow">Title <input id="r-title" required maxlength="120" placeholder="e.g. Isombe with Sweet Potato"></label>
+        <label class="w-emoji">Emoji <input id="r-emoji" maxlength="4" value="🍲"></label>
+      </div>
+      <label>Description <textarea id="r-desc" rows="2"></textarea></label>
+      <div class="row">
+        <label>Meal type <select id="r-meal"></select></label>
+        <label>Prep (min) <input id="r-prep" type="number" min="1" value="30"></label>
+        <label>Base servings <input id="r-serv" type="number" min="1" value="2"></label>
+        <label>Calories / serving <input id="r-kcal" type="number" min="1" value="400"></label>
+      </div>
+      <fieldset><legend>Health focus tags</legend><div id="r-focuses" class="checks"></div></fieldset>
+      <label>Nutrition note <span class="tiny muted">(general reason this meal suits the focus. Don't write personal medical advice or promise health outcomes)</span>
+        <input id="r-note" maxlength="240">
+      </label>
+      <fieldset>
+        <legend>Ingredients (quantities for the base servings)</legend>
+        <div id="r-items" class="items"></div>
+        <button type="button" id="add-item" class="btn small">+ Add ingredient</button>
+      </fieldset>
+      <fieldset>
+        <legend>Photos &amp; demo video</legend>
+        <p class="tiny muted" style="margin-top:0">The first photo is the cover shown on the meal card. Up to 8 photos.</p>
+        <div id="r-existing" class="thumbs-admin"></div>
+        <label>Add photos <span class="tiny muted">(JPG, PNG or WebP, max 5 MB each)</span>
+          <input type="file" id="r-images" accept="image/jpeg,image/png,image/webp" multiple></label>
+        <div id="r-previews" class="thumbs-admin"></div>
+        <hr class="soft">
+        <div id="r-existing-video"></div>
+        <label>Upload a demo video <span class="tiny muted">(MP4 or WebM, max 50 MB)</span>
+          <input type="file" id="r-video" accept="video/mp4,video/webm"></label>
+        <label>…or paste a YouTube / Vimeo link <span class="tiny muted">(best for long videos and slow connections)</span>
+          <input type="url" id="r-video-url" placeholder="https://www.youtube.com/watch?v=..."></label>
+      </fieldset>
+      <label>Cooking steps <span class="tiny muted">(one per line)</span><textarea id="r-steps" rows="4"></textarea></label>
+      <label class="check"><input type="checkbox" id="r-pub" checked> Published (visible to users immediately)</label>
+      <div class="row"><button class="btn primary">Save &amp; publish</button><button type="button" id="reset-form" class="btn ghost">Clear form</button></div>
+    </form>
+  </section>
+
+  <section id="tab-recipes" class="tab" hidden>
+    <div class="page-head"><span class="ico t-pink">📚</span><div><h2>All recipes</h2><p>Edit, unpublish or delete any meal kit.</p></div></div>
+    <div id="recipe-table" class="list"></div>
+  </section>
+
+  <section id="tab-ingredients" class="tab" hidden>
+    <div class="page-head"><span class="ico t-yellow">🥬</span><div><h2>Ingredient catalogue</h2><p>One row per ingredient, reused by every recipe and pantry.</p></div></div>
+    <div class="panel-card t-yellow">
+      <h3>Add or update an ingredient</h3>
+      <p>Saving an existing name updates its price and details.</p>
+      <form id="ing-form" class="inline-form" style="margin:0">
+        <input id="i-name" placeholder="Name" required>
+        <input id="i-kiny" placeholder="Kinyarwanda name">
+        <select id="i-cat"></select>
+        <select id="i-unit"></select>
+        <input id="i-price" type="number" min="0" step="any" placeholder="RWF per unit" required>
+        <label class="check"><input type="checkbox" id="i-local" checked> Local</label>
+        <button class="btn primary">Save ingredient</button>
+      </form>
+    </div>
+    <div id="ing-table" class="list" style="margin-top:1rem"></div>
+  </section>
+
+  <section id="tab-orders" class="tab" hidden>
+    <div class="page-head"><span class="ico t-blue">📦</span><div><h2>Customer orders</h2><p>Update an order's status as it moves from packing to delivery.</p></div></div>
+    <div id="order-table" class="list"></div>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'kits/js/dashboard.js' %}"></script>{% endblock %}

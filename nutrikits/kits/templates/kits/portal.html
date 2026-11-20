@@ -1,0 +1,106 @@
+{% extends "kits/base.html" %}
+{% load static %}
+{% block title %}NutriKits Rwanda · My Kitchen{% endblock %}
+{% block bodyclass %}app-page{% endblock %}
+{% block content %}
+<header class="topbar" id="topbar">
+  <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Rwanda</em></a>
+  <nav id="tabs" class="tabs" aria-label="Sections">
+    <button data-tab="meals" class="active"><span class="ti">🍲</span><span class="tl">Meals</span></button>
+    <button data-tab="pantry"><span class="ti">🧺</span><span class="tl">Pantry</span></button>
+    <button data-tab="orders"><span class="ti">📦</span><span class="tl">Orders</span></button>
+    <button data-tab="profile"><span class="ti">🩺</span><span class="tl">Profile</span></button>
+  </nav>
+  <div class="user">
+    <a class="btn small ghost" href="{% url 'landing' %}">Help</a>
+    <span id="who" class="muted"></span>
+    {% if request.user.is_staff %}<a class="btn small" href="{% url 'dashboard' %}">Admin</a>{% endif %}
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn small ghost">Sign out</button></form>
+  </div>
+</header>
+
+<main class="container">
+  <section id="tab-meals" class="tab">
+    <div class="phero">
+      <span class="float f1" aria-hidden="true">🍠</span><span class="float f2" aria-hidden="true">🥑</span>
+      <span class="float f3" aria-hidden="true">🍅</span><span class="float f4" aria-hidden="true">🐟</span>
+      <div class="phero-text">
+        <p class="eyebrow-l">Your kitchen</p>
+        <h1>Hello, <span class="hl" id="hello">there</span> 👋</h1>
+        <p>Pick a health focus and we'll show what you can cook, and exactly what you still need to buy.</p>
+      </div>
+      <div class="phero-stats" aria-label="Your summary">
+        <div class="pstat"><b id="st-ready">·</b><span>ready to cook</span></div>
+        <div class="pstat"><b id="st-pantry">·</b><span>pantry items</span></div>
+        <div class="pstat"><b id="st-orders">·</b><span>orders</span></div>
+      </div>
+    </div>
+    <div class="notice">⚕️ <b>General nutrition information, not medical advice.</b> Health tags and nutrition notes don't replace your own doctor or dietitian. <a href="{% url 'landing' %}#safety" target="_blank">Safety guide</a></div>
+
+    <div id="closest" class="row-block" data-carousel hidden>
+      <div class="row-head"><div><h3 id="closest-title">Closest to ready</h3><p>Meals you can cook with the fewest extra ingredients.</p></div>
+        <div class="car-ctl inline"><button class="car-btn car-prev" aria-label="Previous meals">‹</button><button class="car-btn car-next" aria-label="Next meals">›</button></div></div>
+      <div class="track" id="closest-track"></div>
+    </div>
+
+    <div id="focus-chips" class="chips" role="group" aria-label="Health focus"></div>
+    <div class="filters">
+      <input id="search" type="search" placeholder="🔍 Search meals…" aria-label="Search meals">
+      <select id="meal-filter" aria-label="Meal type"><option value="">All meals</option></select>
+      <select id="sort" aria-label="Sort">
+        <option value="match">Best pantry match</option>
+        <option value="cost">Lowest cost to buy</option>
+        <option value="calories">Fewest calories</option>
+      </select>
+      <label class="check"><input type="checkbox" id="use-profile"> Use my health profile</label>
+    </div>
+    <div class="result-line"><span id="result-count" aria-live="polite"></span></div>
+    <div id="recipes" class="grid"></div>
+  </section>
+
+  <section id="tab-pantry" class="tab" hidden>
+    <div class="page-head"><span class="ico t-yellow">🧺</span><div><h2>My pantry</h2><p>Tell us what's already in your kitchen. We only charge you for the gaps.</p></div></div>
+    <div class="panel-card t-yellow">
+      <h3>Add or update an ingredient</h3>
+      <p>Tap any item below to edit it. Set the quantity to 0 to remove it.</p>
+      <form id="pantry-form" class="inline-form" style="margin:0">
+        <select id="pantry-ingredient" required aria-label="Ingredient"></select>
+        <input id="pantry-qty" type="number" min="0" step="any" placeholder="Quantity" required aria-label="Quantity">
+        <span id="pantry-unit" class="unit"></span>
+        <button class="btn primary">Save</button>
+      </form>
+    </div>
+    <div id="pantry-list" style="margin-top:1.2rem"></div>
+  </section>
+
+  <section id="tab-orders" class="tab" hidden>
+    <div class="page-head"><span class="ico t-blue">📦</span><div><h2>My orders</h2><p>Follow your missing-ingredient deliveries.</p></div></div>
+    <div id="orders-list" class="list"></div>
+  </section>
+
+  <section id="tab-profile" class="tab" hidden>
+    <div class="page-head"><span class="ico t-pink">🩺</span><div><h2>Health profile</h2><p>Choose a focus only if a doctor, nurse or dietitian recommended it.</p></div></div>
+    <div class="notice red">Selecting a focus filters meals. It does <b>not</b> diagnose anything, and it doesn't replace your clinician's plan. Never change or stop medicines because of a meal. For serious allergies, always read ingredient labels yourself.</div>
+    <form id="profile-form" class="stack">
+      <div class="panel-card t-pink"><h3>Dietary focus</h3><p>Tap to select. You can pick more than one, or none.</p>
+        <div id="profile-focuses" class="checks"></div></div>
+      <div class="panel-card t-yellow"><h3>Ingredients to avoid</h3><p>Comma separated, for example Groundnuts, Eggs. Meals containing these are hidden.</p>
+        <input id="p-allergies" placeholder="Groundnuts, Milk" aria-label="Ingredients to avoid"></div>
+      <div class="panel-card t-blue"><h3>Delivery</h3><p>Where should we bring your ingredients?</p>
+        <div class="stack" style="gap:.7rem">
+          <label>Kigali zone<select id="p-zone"></select></label>
+          <div class="row"><label>Phone <input id="p-phone" placeholder="07XX XXX XXX"></label><label>Delivery note <input id="p-note" placeholder="Street, house number, landmark"></label></div>
+        </div></div>
+      <div><button class="btn primary">Save profile</button></div>
+    </form>
+  </section>
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Recipe details">
+    <button class="close" id="modal-close" aria-label="Close">×</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script type="module" src="{% static 'kits/js/portal.js' %}"></script>{% endblock %}

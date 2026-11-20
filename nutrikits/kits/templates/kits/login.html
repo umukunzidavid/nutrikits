@@ -1,0 +1,34 @@
+{% extends "kits/base.html" %}
+{% block title %}Sign in · NutriKits Rwanda{% endblock %}
+{% block bodyclass %}auth-page{% endblock %}
+{% block content %}
+<div class="auth-split">
+  <aside class="auth-art">
+    <span class="float a1" aria-hidden="true">🍠</span><span class="float a2" aria-hidden="true">🐟</span>
+    <span class="float a3" aria-hidden="true">🥑</span><span class="float a4" aria-hidden="true">🫘</span>
+    <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Rwanda</em></a>
+    <h1>Welcome back to your kitchen</h1>
+    <p>See which meals you can cook tonight with what you already have, and order only the missing ingredients.</p>
+    <ul>
+      <li>🧺 Your pantry, remembered</li>
+      <li>🩺 Meals filtered by health focus</li>
+      <li>🛵 Delivery across Kigali</li>
+    </ul>
+  </aside>
+  <main class="auth-side">
+    <form method="post" class="auth-card">
+      {% csrf_token %}
+      <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Rwanda</em></a>
+      <h2>Sign in</h2>
+      {% if form.errors %}<div class="alert" role="alert">Wrong username or password. Please try again.</div>{% endif %}
+      <label>Username <input name="username" autocomplete="username" required autofocus></label>
+      <label>Password <input type="password" name="password" autocomplete="current-password" required></label>
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button class="btn primary block">Sign in</button>
+      <p class="center muted" style="margin:0">New here? <a href="{% url 'register' %}">Create an account</a></p>
+      <p class="auth-back"><a href="{% url 'landing' %}">← How NutriKits works &amp; safety guide</a></p>
+      <p class="center tiny muted" style="margin:0">Demo: <code>demo</code> / <code>demo12345</code> · Admin: <code>admin</code> / <code>admin12345</code></p>
+    </form>
+  </main>
+</div>
+{% endblock %}

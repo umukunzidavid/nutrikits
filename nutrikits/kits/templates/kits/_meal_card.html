@@ -1,0 +1,11 @@
+<a class="meal-card" href="{{ cta_url }}" aria-label="{{ r.title }}, {{ r.prep }} minutes">
+  <div class="meal-media tone-{{ r.meal_type }}">
+    {% if r.cover %}<img src="{{ r.cover }}" alt="{{ r.title }}" loading="lazy">{% else %}<span class="meal-emoji" aria-hidden="true">{{ r.emoji }}</span>{% endif %}
+    <span class="meal-time">⏱ {{ r.prep }} min</span>
+  </div>
+  <div class="meal-body">
+    <h4>{{ r.title }}</h4>
+    <p class="meta">{{ r.kcal }} kcal · ~{{ r.cost_label }} RWF / serving</p>
+    <div class="mini-tags">{% for f in r.focuses|slice:":2" %}<span>{{ f.icon }} {{ f.name }}</span>{% endfor %}</div>
+  </div>
+</a>

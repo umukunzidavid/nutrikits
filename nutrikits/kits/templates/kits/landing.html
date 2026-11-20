@@ -1,0 +1,253 @@
+{% extends "kits/base.html" %}
+{% load static %}
+{% block title %}NutriKits Rwanda · Healthy home cooking made effortless{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'kits/css/landing.css' %}"><noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>{% endblock %}
+{% block bodyclass %}landing{% endblock %}
+{% block content %}
+
+<div class="announce" id="announce">
+  <span>🌿 <b>Cook with what you already have.</b> Order only the ingredients you're missing. <a href="#how">See how →</a></span>
+  <button id="announce-close" aria-label="Dismiss announcement">×</button>
+</div>
+
+<header class="lnav" id="lnav">
+  <div class="lnav-in">
+    <a class="lbrand" href="{% url 'landing' %}"><span>🌿</span> NutriKits <em>Rwanda</em></a>
+    <nav class="lmenu" id="lmenu" aria-label="Main">
+      <ul>
+        <li class="has-dd">
+          <button id="dd-toggle" aria-expanded="false" aria-haspopup="true">Meals for you <span class="caret">▾</span></button>
+          <div class="dd" id="dd-menu">
+            {% for f in focuses %}<a href="#find" data-focus="{{ f.slug }}"><span>{{ f.icon }}</span> {{ f.name }}</a>{% endfor %}
+            <a href="#find" data-focus="all" class="all">Browse all meals →</a>
+          </div>
+        </li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#budget">Budget</a></li>
+        <li><a href="#safety">Safety</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="lauth m">
+        {% if request.user.is_authenticated %}<a class="lbtn solid" href="{% url 'portal' %}">Open my kitchen</a>
+        {% else %}<a class="lbtn" href="{% url 'login' %}">Sign in</a><a class="lbtn solid" href="{% url 'register' %}">Get started</a>{% endif %}
+      </div>
+    </nav>
+    <div class="lauth d">
+      {% if request.user.is_authenticated %}<a class="lbtn solid" href="{% url 'portal' %}">Open my kitchen</a>
+      {% else %}<a class="lbtn" href="{% url 'login' %}">Log in</a><a class="lbtn solid" href="{% url 'register' %}">Get started</a>{% endif %}
+    </div>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="lmenu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+<!-- ============================================================ HERO -->
+<section class="hero2">
+  <div class="hero2-card">
+    <span class="float f1" aria-hidden="true">🍠</span><span class="float f2" aria-hidden="true">🥑</span>
+    <span class="float f3" aria-hidden="true">🐟</span><span class="float f4" aria-hidden="true">🍌</span>
+    <span class="float f5" aria-hidden="true">🫘</span><span class="float f6" aria-hidden="true">🍆</span>
+    <span class="float f7" aria-hidden="true">🥛</span><span class="float f8" aria-hidden="true">🍅</span>
+    <div class="hero2-text">
+      <p class="eyebrow-l">Home cooking · Kigali delivery · Prices in RWF</p>
+      <h1>Healthy eating made <span class="hl">effortless</span></h1>
+      <p class="hero-lead">Meal kits built around real dietary needs, cooked from traditional Rwandan ingredients. Tell us what's in your kitchen, and we'll show you what to cook and the few things to buy.</p>
+      <div class="cta-row">
+        <a class="lbtn solid big" href="{{ cta_url }}">{% if request.user.is_authenticated %}Open my kitchen{% else %}Get started free{% endif %}</a>
+        <a class="lbtn ghost-w big" href="#how">See how it works</a>
+      </div>
+      <ul class="hero-points"><li>✓ Only pay for what's missing</li><li>✓ Filter by health focus</li><li>✓ Delivery across Kigali</li></ul>
+    </div>
+    <div class="mock" aria-label="Example of a pantry match">
+      <span class="mock-label">Example</span>
+      <div class="mock-head"><span class="mock-emoji">🍠</span><div><b>Isombe with Sweet Potato</b><small>Lunch · 45 min · 420 kcal</small></div></div>
+      <div class="mock-row"><span>Pantry match</span><b>67%</b></div>
+      <div class="mock-bar"><span style="--w:67%"></span></div>
+      <ul class="mock-list">
+        <li class="ok">✓ Sweet potato <small>in your pantry</small></li>
+        <li class="ok">✓ Onion <small>in your pantry</small></li>
+        <li class="ok">✓ Cooking oil <small>in your pantry</small></li>
+        <li class="need">+ Cassava leaves <small>400 g</small></li>
+        <li class="need">+ Groundnuts <small>40 g</small></li>
+      </ul>
+      <div class="mock-total"><span>You only buy 2 items</span><b>Pay for the gap</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ HOW IT WORKS (carousel) -->
+<section class="sec" id="how">
+  <div class="sec-head reveal">
+    <h2>Cooking gets <em>personal</em></h2>
+    <p>Four simple steps from "what's in my kitchen?" to dinner on the table.</p>
+  </div>
+  <div class="carousel reveal" data-carousel data-autoplay="5500" aria-roledescription="carousel" aria-label="How NutriKits works">
+    <div class="track steps">
+      <article class="slide s-pink">
+        <div class="slide-text"><span class="num-l">01</span><h3>It starts with a few questions</h3>
+          <p>Tell us the dietary focus your doctor or dietitian suggested (or none at all), what you avoid, and where in Kigali you live.</p></div>
+        <div class="phone"><div class="bubble">🩺 Health focus</div><div class="bubble alt">Diabetes-friendly</div><div class="bubble">🚫 Avoid: groundnuts</div><div class="bubble alt">📍 Remera / Kisimenti</div></div>
+      </article>
+      <article class="slide s-yellow">
+        <div class="slide-text"><span class="num-l">02</span><h3>Add what's in your pantry</h3>
+          <p>Sweet potatoes, beans, oil, onions. The more you tell us you already have, the less you pay for.</p></div>
+        <div class="phone"><div class="prow"><span>🍠 Sweet potato</span><b>500 g</b></div><div class="prow"><span>🧅 Onion</span><b>100 g</b></div><div class="prow"><span>🛢️ Cooking oil</span><b>200 ml</b></div><div class="prow"><span>🍅 Tomato</span><b>150 g</b></div></div>
+      </article>
+      <article class="slide s-blue">
+        <div class="slide-text"><span class="num-l">03</span><h3>Browse meals matched to you</h3>
+          <p>Every meal shows how much of it you can already cook, plus what you'd still need and what it costs.</p></div>
+        <div class="phone"><div class="pm"><b>🐟 Grilled Tilapia</b><div class="pm-bar"><span style="width:72%"></span></div><small>72% match</small></div><div class="pm"><b>🫘 Beans &amp; Dodo</b><div class="pm-bar"><span style="width:45%"></span></div><small>45% match</small></div><div class="pm"><b>🥣 Sorghum Bowl</b><div class="pm-bar"><span style="width:30%"></span></div><small>30% match</small></div></div>
+      </article>
+      <article class="slide s-peach">
+        <div class="slide-text"><span class="num-l">04</span><h3>Order only the gaps</h3>
+          <p>Your shopping list holds just the missing ingredients. Pick your zone and how you'd like to pay, then follow your order.</p></div>
+        <div class="phone"><div class="prow"><span>Cassava leaves</span><b>400 g</b></div><div class="prow"><span>Groundnuts</span><b>40 g</b></div><div class="prow tot"><span>Delivery · Remera</span><b>2,000 RWF</b></div><div class="pbtn">Order missing items</div></div>
+      </article>
+    </div>
+    <div class="car-ctl"><button class="car-btn car-prev" aria-label="Previous step">‹</button><div class="dots"></div><button class="car-btn car-next" aria-label="Next step">›</button></div>
+  </div>
+  <p class="note-l reveal"><b>Good to know:</b> the pantry match % only shows how many ingredients you already have. It is <u>not</u> a health score.</p>
+</section>
+
+<!-- ============================================================ STATS -->
+<section class="sec tight" id="numbers">
+  <div class="sec-head reveal"><h2>Real food. <em>Real Rwandan</em> flavours.</h2></div>
+  <div class="stat-row">
+    <div class="stat-card c-pink reveal"><span class="badge">🍲 Meals</span><b class="big-n"><span class="count" data-count="{{ stats.meals }}">{{ stats.meals }}</span></b><p>ready-to-cook meal kits, each with a clear nutrition note</p></div>
+    <div class="stat-card c-green reveal d1"><span class="badge">🥬 Ingredients</span><b class="big-n"><span class="count" data-count="{{ stats.ingredients }}">{{ stats.ingredients }}</span></b><p>everyday and traditional ingredients, priced in RWF</p></div>
+    <div class="stat-card c-yellow reveal d2"><span class="badge">🩺 Health focuses</span><b class="big-n"><span class="count" data-count="{{ stats.focuses }}">{{ stats.focuses }}</span></b><p>dietary focuses to filter meals by</p></div>
+    <div class="stat-card c-blue reveal d3"><span class="badge">🛵 Delivery</span><b class="big-n"><span class="count" data-count="{{ stats.zones }}">{{ stats.zones }}</span></b><p>Kigali delivery zones, each with its own fee</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ MEAL FINDER -->
+<section class="panel p-blue reveal" id="find">
+  <div class="panel-in">
+    <h2>Find meals for <em>your needs</em></h2>
+    <p class="sub">Tap a focus to see matching meals. These are filters to help you browse. They are not a diagnosis.</p>
+    <div class="chip-scroll" id="find-chips" role="group" aria-label="Health focus"></div>
+    <div class="find-panel" id="find-panel" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============================================================ MEAL ROWS (sliding cards) -->
+<section class="sec" id="meals">
+  <div class="sec-head reveal"><h2>Get everything you'd <em>ever want</em></h2><p>Slide through meals for every part of the day. Tap any card to start cooking.</p></div>
+  {% for g in groups %}
+  <div class="row-block reveal" data-carousel>
+    <div class="row-head"><div><h3>{{ g.label }}</h3><p>{{ g.blurb }}</p></div>
+      <div class="car-ctl inline"><button class="car-btn car-prev" aria-label="Previous {{ g.label }}">‹</button><button class="car-btn car-next" aria-label="Next {{ g.label }}">›</button></div></div>
+    <div class="track cards">{% for r in g.recipes %}{% include "kits/_meal_card.html" %}{% endfor %}</div>
+  </div>
+  {% endfor %}
+</section>
+
+<!-- ============================================================ BUDGET -->
+<section class="panel p-yellow reveal" id="budget">
+  <div class="panel-in">
+    <h2>Built around your <em>budget</em></h2>
+    <p class="sub">You set the pace. We show estimated costs before you order, and you never pay for what's already in your pantry.</p>
+    <div class="budget-grid">
+      <div class="card-l">
+        <h3>Big flavours. Small price tags.</h3>
+        <p class="tiny-l">Estimated cost per serving, from catalogue prices</p>
+        <ul class="price-list">
+          {% for c in cheapest %}<li><span class="pl-name">{{ c.emoji }} {{ c.title }}</span><span class="pl-bar"><i style="width:{{ c.bar }}%"></i></span><b>~{{ c.cost_label }}</b></li>{% endfor %}
+        </ul>
+        <p class="tiny-l">RWF per serving. Prices are estimates and can be edited by the shop.</p>
+      </div>
+      {% if example %}
+      <div class="card-l ex">
+        <span class="mock-label">Example</span>
+        <h3>{{ example.emoji }} {{ example.title }}</h3>
+        <p class="tiny-l">If you already had {{ example.have|join:", " }} at home…</p>
+        <div class="ex-row"><span>Full ingredients ({{ example.servings }} servings)</span><b>{{ example.full }} RWF</b></div>
+        <div class="ex-row save"><span>Already in your pantry</span><b>− {{ example.saved }} RWF</b></div>
+        <div class="ex-row total"><span>You pay for the rest</span><b>{{ example.pay }} RWF</b></div>
+        <p class="tiny-l">plus delivery. Still to buy: {{ example.need|join:", " }}…</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ COMPARE -->
+<section class="panel p-peach reveal" id="compare">
+  <div class="panel-in">
+    <h2>How we <em>stack up</em></h2>
+    <p class="sub">Better than a full meal-kit box. Smarter than shopping without a plan. (General comparison; details vary by provider.)</p>
+    <div class="cmp" role="table" aria-label="Comparison">
+      <div class="cmp-row head" role="row"><span></span><b class="us">🌿 NutriKits</b><b>Typical meal-kit box</b><b>Shopping without a plan</b></div>
+      <div class="cmp-row" role="row"><span>Uses what's already in your kitchen</span><i class="y">✓</i><i class="n">✕</i><i class="n">✕</i></div>
+      <div class="cmp-row" role="row"><span>Pay only for missing ingredients</span><i class="y">✓</i><i class="n">✕</i><i class="n">✕</i></div>
+      <div class="cmp-row" role="row"><span>Meals filtered by health focus</span><i class="y">✓</i><i class="m">~</i><i class="n">✕</i></div>
+      <div class="cmp-row" role="row"><span>Local Rwandan ingredients</span><i class="y">✓</i><i class="m">~</i><i class="y">✓</i></div>
+      <div class="cmp-row" role="row"><span>See the cost before you order</span><i class="y">✓</i><i class="y">✓</i><i class="n">✕</i></div>
+    </div>
+    <p class="tiny-l">✓ yes · ~ sometimes · ✕ usually not</p>
+  </div>
+</section>
+
+<!-- ============================================================ SAFETY -->
+<section class="sec" id="safety">
+  <div class="safety2 reveal">
+    <div class="safety-top">
+      <span class="s-ico">⚕️</span>
+      <div><h2>Please read: using NutriKits safely</h2>
+      <p><b>NutriKits is a cooking and shopping helper. It is not a medical service.</b> We don't diagnose conditions, prescribe treatment or replace your doctor, nurse or dietitian.</p></div>
+    </div>
+    <div class="safety-cards">
+      <div class="sc"><span>🩺</span><h3>Your doctor's advice comes first</h3><p>If a health professional has given you a specific plan (foods to avoid, portion sizes, calorie targets, medicines), follow that plan. If it differs from anything on this site, your doctor is right and the site is not.</p></div>
+      <div class="sc"><span>🏷️</span><h3>Health tags are not prescriptions</h3><p>A tag such as "Diabetes-friendly" or "Hypertension" means the meal follows general healthy-eating ideas for that goal. It does not mean the meal is right for <i>you</i>, and the nutrition note on each meal is general information, not personal medical advice.</p></div>
+      <div class="sc"><span>🚫</span><h3>Don't pick a focus to treat yourself</h3><p>Choose a health focus only if a health professional recommended it. Don't use this site to decide whether you have a condition, and never change or stop medicines (including insulin) because of a meal.</p></div>
+      <div class="sc"><span>🤰</span><h3>Take extra care if you…</h3><p>are pregnant or breastfeeding, are cooking for a baby or a child with a medical condition, have kidney or heart disease, or take several medicines (some foods affect certain medicines). Ask your clinic before changing what you eat.</p></div>
+      <div class="sc"><span>🥜</span><h3>Allergies and intolerances</h3><p>The "ingredients to avoid" list hides meals that contain the ingredient names you type in. It can't catch hidden ingredients, spelling differences or cross-contamination. For a serious allergy, always check every ingredient yourself.</p></div>
+      <div class="sc"><span>🔢</span><h3>Numbers are estimates</h3><p>Calories, quantities, prep times and prices are approximate. Final delivery fees and totals are shown before you order.</p></div>
+    </div>
+    <div class="warn-l"><b>Feeling unwell?</b> Don't wait for a meal to fix it. Contact your nearest health centre or hospital, or your local emergency service, especially for severe symptoms such as chest pain, difficulty breathing, fainting, or very high or low blood sugar.</div>
+  </div>
+</section>
+
+<!-- ============================================================ FAQ -->
+<section class="sec narrow-s" id="faq">
+  <div class="sec-head reveal"><h2>You have questions. <em>We have answers.</em></h2></div>
+  <div class="faq reveal">
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>Is this medical advice?</span><i class="plus">+</i></button><div class="faq-a"><p>No. It's general nutrition information to help you plan home cooking. Always follow your own doctor or dietitian.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>Do I need a health condition to use it?</span><i class="plus">+</i></button><div class="faq-a"><p>No. Health focus is optional. You can browse every meal and use the pantry matching without choosing one.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>How is the pantry match calculated?</span><i class="plus">+</i></button><div class="faq-a"><p>It's the share of a meal's ingredients you already have in enough quantity for the servings you chose. It tells you how ready you are to cook, not how healthy the meal is.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>Will I pay for ingredients I already have?</span><i class="plus">+</i></button><div class="faq-a"><p>No. Your pantry is subtracted from the recipe and you only order what's missing.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>How do I stay safe if I have an allergy?</span><i class="plus">+</i></button><div class="faq-a"><p>Add the ingredient to "ingredients to avoid" in your health profile, then still read every ingredient list yourself. The filter is a helper, not a guarantee.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>Where do you deliver?</span><i class="plus">+</i></button><div class="faq-a"><p>Selected Kigali areas. Each zone shows its own delivery fee and estimated time before you order.</p></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false"><span>Can I cook these meals for children?</span><i class="plus">+</i></button><div class="faq-a"><p>Many are family-friendly, but babies and children with medical conditions have special needs. Ask your clinic first.</p></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ FINAL CTA -->
+<section class="cta-band reveal">
+  <div class="cta-in">
+    <div class="cta-emojis" aria-hidden="true"><span>🍠</span><span>🥑</span><span>🐟</span><span>🫘</span></div>
+    <h2>Ready to dig in?</h2>
+    <p>Create a free account, tell us what's in your kitchen, and see tonight's dinner.</p>
+    <a class="lbtn solid big" href="{{ cta_url }}">{% if request.user.is_authenticated %}Open my kitchen{% else %}Get started free{% endif %}</a>
+  </div>
+</section>
+</main>
+
+<!-- ============================================================ TICKER + FOOTER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-in">
+    {% for k, n in ticker %}<span>🌿 {{ k }} <small>({{ n }})</small></span>{% endfor %}
+    {% for k, n in ticker %}<span>🌿 {{ k }} <small>({{ n }})</small></span>{% endfor %}
+  </div>
+</div>
+<footer class="lfoot">
+  <div class="lfoot-in">
+    <div><div class="lbrand light"><span>🌿</span> NutriKits <em>Rwanda</em></div>
+      <p>General nutrition information only. Not a substitute for professional medical advice, diagnosis or treatment.</p></div>
+    <div><h5>Explore</h5><a href="#how">How it works</a><a href="#find">Meals for you</a><a href="#budget">Budget</a></div>
+    <div><h5>Help</h5><a href="#safety">Safety guide</a><a href="#faq">FAQ</a>
+      {% if request.user.is_authenticated %}<a href="{% url 'portal' %}">Open my kitchen</a>{% else %}<a href="{% url 'login' %}">Sign in</a><a href="{% url 'register' %}">Create account</a>{% endif %}</div>
+  </div>
+</footer>
+{% endblock %}
+{% block scripts %}{{ landing_data|json_script:"landing-data" }}<script type="module" src="{% static 'kits/js/landing.js' %}"></script>{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "kits/base.html" %}
+{% block title %}Create account · NutriKits Rwanda{% endblock %}
+{% block bodyclass %}auth-page{% endblock %}
+{% block content %}
+<div class="auth-split">
+  <aside class="auth-art">
+    <span class="float a1" aria-hidden="true">🥑</span><span class="float a2" aria-hidden="true">🍌</span>
+    <span class="float a3" aria-hidden="true">🍅</span><span class="float a4" aria-hidden="true">🍆</span>
+    <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Rwanda</em></a>
+    <h1>Cook healthy with what you already have</h1>
+    <p>Create a free account, add your pantry, and get meals matched to it. You only pay for what's missing.</p>
+    <ul>
+      <li>1️⃣ Tell us what's in your kitchen</li>
+      <li>2️⃣ Pick a health focus (optional)</li>
+      <li>3️⃣ Order only the gaps</li>
+    </ul>
+  </aside>
+  <main class="auth-side">
+    <form method="post" class="auth-card">
+      {% csrf_token %}
+      <a class="brand" href="{% url 'landing' %}"><span class="logo">🌿</span> NutriKits <em>Rwanda</em></a>
+      <h2>Create your account</h2>
+      {% for field in form %}
+        <label>{{ field.label }}{{ field }}
+          {% for e in field.errors %}<span class="err">{{ e }}</span>{% endfor %}
+          {% if field.help_text %}<span class="tiny muted">{{ field.help_text|safe }}</span>{% endif %}
+        </label>
+      {% endfor %}
+      <label class="consent">
+        <input type="checkbox" name="accept_terms" required>
+        <span>I understand that NutriKits gives general nutrition information, <b>not medical advice</b>, and that my doctor's or dietitian's advice always comes first. <a href="{% url 'landing' %}#safety" target="_blank">Read the safety guide</a></span>
+      </label>
+      {% if consent_missing %}<span class="err">Please confirm you have read the safety notice.</span>{% endif %}
+      <button class="btn primary block">Create account</button>
+      <p class="center muted" style="margin:0">Already registered? <a href="{% url 'login' %}">Sign in</a></p>
+      <p class="auth-back"><a href="{% url 'landing' %}">← Back to the home page</a></p>
+    </form>
+  </main>
+</div>
+{% endblock %}
